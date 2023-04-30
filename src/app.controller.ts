@@ -1,28 +1,36 @@
-import { Controller, Get, Post, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ReportType, data } from './data';
 
 @Controller('report/:type')
 export class AppController {
   // constructor(private readonly appService: AppService) {}
 
   @Get()
-  getAllIncomeReport() {
-    return []
+  getAllIncomeReport(
+    @Param('type') type: string
+  ) {
+    const rpType = type === "income" ? ReportType.INCOME : ReportType.EXPENSE
+    return data.report.filter((item) => item.type === rpType)
   }
 
   @Get(':id')
-  getIncomeReportById() {
-    return {}
+  getIncomeReportById(
+    @Param('type') type: string,
+    @Param('id') id: string
+  ) {
+    const rpType = type === "income" ? ReportType.INCOME : ReportType.EXPENSE
+    return data.report.filter((item) => item.type === rpType).find((item) => item.id === id)
   }
 
   @Post()
-  postIncomeReport() {
+  createIncomeReport(
+    @Body() body: {
+      amount: number,
+      sources: string
+    }
+  ) {
     return "Ok"
-  }
-
-  @Post(':id')
-  postIncomeReportById() {
-    return "DOne1"
   }
 
   @Put(':id')
